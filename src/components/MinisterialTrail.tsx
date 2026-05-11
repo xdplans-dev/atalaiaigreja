@@ -103,13 +103,13 @@ const STAGES = [
 
 export default function MinisterialTrail() {
   return (
-    <div className="bg-church-black min-h-screen text-white relative overflow-hidden selection:bg-church-gold selection:text-white">
+    <div className="bg-church-black min-h-screen flex flex-col text-white relative overflow-hidden selection:bg-church-gold selection:text-white">
       {/* Background Glows */}
       <div className="ambient-glow top-0 right-0 w-[600px] h-[600px] bg-church-gold opacity-[0.05]" />
       <div className="ambient-glow bottom-0 left-0 w-[500px] h-[500px] bg-church-gold opacity-[0.03]" />
 
       {/* Header Container */}
-      <div className="relative z-10">
+      <div className="relative z-10 flex flex-col flex-1">
         {/* Navigation */}
         <nav className="fixed top-0 left-0 right-0 z-50 h-20 border-b border-white/10 backdrop-blur-md bg-black/20 flex items-center justify-between px-6 md:px-10">
           <Link to="/" className="flex items-center gap-3 group">
@@ -345,7 +345,7 @@ export default function MinisterialTrail() {
           </div>
         </section>
 
-        <footer className="relative z-20 h-auto md:h-20 bg-black flex flex-col md:flex-row items-center justify-between px-6 md:px-10 border-t border-white/5 py-8 md:py-0 gap-4 text-center md:text-left">
+        <footer className="relative z-20 h-auto md:h-20 bg-church-black flex flex-col md:flex-row items-center justify-between px-6 md:px-10 border-t border-white/5 py-8 md:py-0 gap-4 text-center md:text-left mt-auto">
           <span className="text-[8px] md:text-[9px] uppercase text-white/20 tracking-wider">© 2026 Igreja Atalaias Vale da Benção</span>
           <span className="text-[8px] md:text-[9px] uppercase text-white/40 tracking-wider">
             Desenvolvido por <span className="text-white font-bold">XD Plans • David Xavier</span>

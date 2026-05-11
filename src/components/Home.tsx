@@ -11,6 +11,42 @@ import { Link } from 'react-router-dom';
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [prayerName, setPrayerName] = useState('');
+  const [prayerMessage, setPrayerMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+
+  const handlePrayerSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!prayerName || !prayerMessage) return;
+
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const response = await fetch('/api/prayer-requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: prayerName, request: prayerMessage }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus({ type: 'success', message: data.message });
+        setPrayerName('');
+        setPrayerMessage('');
+        // Clear success message after 5 seconds
+        setTimeout(() => setSubmitStatus(null), 5000);
+      } else {
+        setSubmitStatus({ type: 'error', message: data.error || 'Erro ao enviar pedido.' });
+      }
+    } catch (error) {
+      setSubmitStatus({ type: 'error', message: 'Erro de conexão com o servidor.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -143,7 +179,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <main>
+      <main className="flex-1">
         {/* Hero Section */}
         <section id="home" className="relative min-h-screen flex items-center px-6 md:px-10 pt-24 md:pt-20 overflow-hidden">
           {/* Background Image with Overlay */}
@@ -425,12 +461,18 @@ export default function Home() {
                 </div>
               </div>
 
-              <form className="glass p-10 rounded-[2.5rem] border-white/5 space-y-6">
+              <form 
+                className="glass p-10 rounded-[2.5rem] border-white/5 space-y-6"
+                onSubmit={handlePrayerSubmit}
+              >
                 <div className="space-y-4">
                   <label className="text-xs font-bold uppercase tracking-widest text-white/40 block">Seu Nome</label>
                   <input 
                     type="text" 
+                    value={prayerName}
+                    onChange={(e) => setPrayerName(e.target.value)}
                     placeholder="Como gostaria de ser chamado?" 
+                    required
                     className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-church-gold/50 outline-none transition-all"
                   />
                 </div>
@@ -438,13 +480,40 @@ export default function Home() {
                   <label className="text-xs font-bold uppercase tracking-widest text-white/40 block">Sua Mensagem / Pedido</label>
                   <textarea 
                     rows={4}
+                    value={prayerMessage}
+                    onChange={(e) => setPrayerMessage(e.target.value)}
                     placeholder="Descreva seu pedido de oração..." 
+                    required
                     className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-church-gold/50 outline-none transition-all resize-none"
                   ></textarea>
                 </div>
-                <button className="w-full py-5 bg-church-gold hover:bg-church-gold-light text-white rounded-2xl font-bold uppercase tracking-[0.2em] text-sm transition-all shadow-xl shadow-church-gold/20 flex items-center justify-center gap-3">
-                  Enviar Pedido
-                  <ArrowRight className="w-4 h-4" />
+
+                {submitStatus && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={cn(
+                      "p-4 rounded-xl text-sm font-medium",
+                      submitStatus.type === 'success' ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-red-500/10 text-red-500 border border-red-500/20"
+                    )}
+                  >
+                    {submitStatus.message}
+                  </motion.div>
+                )}
+
+                <button 
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-5 bg-church-gold hover:bg-church-gold-light disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-2xl font-bold uppercase tracking-[0.2em] text-sm transition-all shadow-xl shadow-church-gold/20 flex items-center justify-center gap-3"
+                >
+                  {isSubmitting ? (
+                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                  ) : (
+                    <>
+                      Enviar Pedido
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               </form>
             </div>
@@ -589,7 +658,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-20 h-auto lg:h-20 bg-black flex flex-col lg:flex-row items-center justify-between px-6 md:px-10 py-8 lg:py-0 border-t border-white/5 gap-8 lg:gap-6">
+      <footer className="relative z-20 h-auto lg:h-20 bg-church-black flex flex-col lg:flex-row items-center justify-between px-6 md:px-10 py-8 lg:py-0 border-t border-white/5 gap-8 lg:gap-6 mt-auto">
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 text-[9px] md:text-[10px] text-white/40 uppercase tracking-widest text-center lg:text-left">
           <div className="flex flex-col sm:flex-row items-center gap-2 justify-center lg:justify-start">
             <span className="text-church-gold font-bold">Sede:</span> 
