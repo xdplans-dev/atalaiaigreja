@@ -1,0 +1,12 @@
+{
+  "name": "Igreja Atalaias Vale da Benção",
+  "description": "Uma igreja moderna, premium e acolhedora focada em discipulado, liderança e no impacto do Reino de Deus.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "SEO",
+    "Responsive Design",
+    "High Performance"
+  ]
+}
