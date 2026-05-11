@@ -44,7 +44,7 @@ export default function Home() {
           isScrolled ? "bg-church-black/80 backdrop-blur-xl py-4 border-b border-white/10" : "bg-transparent py-6 md:py-8"
         )}
       >
-        <div className="max-w-7xl mx-auto px-6 shadow-sm md:px-10 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between">
           <a href="#home" className="flex items-center gap-3 group">
             <div className="w-10 h-10 border-2 border-church-gold flex items-center justify-center transform rotate-45 group-hover:scale-110 transition-transform duration-500">
               <Cross className="w-5 h-5 text-church-gold -rotate-45" />
@@ -154,13 +154,13 @@ export default function Home() {
           </div>
 
           <div className="relative z-20 max-w-7xl mx-auto w-full">
-            <div className="grid lg:grid-cols-12 gap-8 md:gap-12 items-center">
+            <div className="grid lg:grid-cols-12 gap-12 lg:gap-12 items-center">
               {/* Hero Left Text Area */}
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
-                className="lg:col-span-7"
+                className="lg:col-span-7 text-center lg:text-left flex flex-col items-center lg:items-start"
               >
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-6">
                   <span className="w-1.5 h-1.5 bg-church-gold rounded-full animate-pulse"></span>
@@ -168,16 +168,16 @@ export default function Home() {
                 </div>
                 <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold text-white mb-6 tracking-tight leading-[1.1]">
                   Levando <span className="text-church-gold italic">Luz</span>,<br />
-                  Esperança e <span className="relative">
+                  Esperança e <span className="relative inline-block lg:inline">
                     Transformação
                     <span className="absolute -bottom-2 left-0 w-1/3 h-1 bg-church-gold"></span>
                   </span>
                 </h1>
-                <p className="text-white/60 max-w-lg text-base md:text-lg mb-10 font-light leading-relaxed">
+                <p className="text-white/60 max-w-lg text-base md:text-lg mb-10 font-light leading-relaxed mx-auto lg:mx-0">
                   {CHURCH_DATA.purpose}
                 </p>
                 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
                   <a 
                     href="#live"
                     className="flex items-center gap-3 px-8 py-4 bg-white text-black font-bold uppercase text-xs tracking-widest hover:bg-church-gold hover:text-white transition-all duration-300 w-full sm:w-auto justify-center"
@@ -199,7 +199,7 @@ export default function Home() {
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="lg:col-span-5 flex flex-col gap-4"
+                className="lg:col-span-5 flex flex-col gap-4 w-full max-w-md mx-auto lg:max-w-none"
               >
                 {/* Ministries Spotlight */}
                 <div className="p-6 bg-white/5 border border-white/10 backdrop-blur-md rounded-lg flex flex-col group hover:border-church-gold/50 transition-all">
@@ -207,9 +207,9 @@ export default function Home() {
                     <span className="text-[10px] uppercase tracking-widest text-church-gold font-bold">Nossos Ministérios</span>
                     <a href="#ministries" className="text-xs opacity-40 hover:opacity-100 transition-opacity">Ver Todos</a>
                   </div>
-                  <div className="flex gap-3 overflow-hidden">
+                  <div className="grid grid-cols-3 gap-2 md:gap-3 overflow-hidden">
                     {CHURCH_DATA.ministries.slice(0, 3).map((m, i) => (
-                      <div key={i} className="min-w-[100px] flex-1 h-24 bg-white/5 rounded overflow-hidden relative border border-white/5 hover:border-church-gold/30 transition-colors">
+                      <div key={i} className="flex-1 h-24 bg-white/5 rounded overflow-hidden relative border border-white/5 hover:border-church-gold/30 transition-colors">
                         <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-80"></div>
                         <span className="absolute bottom-2 left-2 text-[10px] uppercase font-bold text-white/90">{m.title}</span>
                       </div>
@@ -374,7 +374,7 @@ export default function Home() {
           </div>
 
           <div className="relative z-10 max-w-5xl mx-auto px-6">
-            <div className="glass p-12 rounded-[3rem] text-center border-church-gold/20 flex flex-col items-center">
+            <div className="glass p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] text-center border-church-gold/20 flex flex-col items-center">
               <div className="w-20 h-20 rounded-full bg-red-600/20 flex items-center justify-center mb-8 animate-pulse text-red-600">
                 <PlayCircle className="w-10 h-10 fill-red-600" />
               </div>
@@ -447,14 +447,14 @@ export default function Home() {
         </section>
 
         {/* Ministries Section */}
-        <section id="ministries" className="py-32 bg-neutral-900/40 relative">
+        <section id="ministries" className="py-24 md:py-32 bg-neutral-900/40 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6">
-             <div className="text-center mb-20">
+             <div className="text-center mb-12 md:mb-20">
               <span className="text-church-gold font-bold tracking-widest uppercase text-xs mb-4 block">Nossos Ministérios</span>
-              <h2 className="text-4xl md:text-6xl font-serif font-bold text-white">Comunidade em <span className="italic text-church-gold">Ação</span></h2>
+              <h2 className="text-3xl md:text-6xl font-serif font-bold text-white">Comunidade em <span className="italic text-church-gold">Ação</span></h2>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {CHURCH_DATA.ministries.map((min, idx) => (
                 <motion.div 
                   key={idx}
@@ -485,7 +485,7 @@ export default function Home() {
         {/* Offerings Section */}
         <section id="offerings" className="py-32 bg-church-black">
           <div className="max-w-4xl mx-auto px-6">
-            <div className="glass p-12 lg:p-20 rounded-[4rem] text-center relative overflow-hidden border-church-gold/30">
+            <div className="glass p-8 md:p-12 lg:p-20 rounded-[2rem] md:rounded-[4rem] text-center relative overflow-hidden border-church-gold/30">
               <div className="absolute top-0 right-0 w-64 h-64 bg-church-gold/5 rounded-full blur-[100px] -mr-32 -mt-32" />
               <div className="relative z-10">
                 <span className="text-church-gold font-bold tracking-widest uppercase text-xs mb-6 block">Generosidade</span>
@@ -520,9 +520,9 @@ export default function Home() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-32 bg-church-black relative border-t border-white/10">
+        <section id="contact" className="py-24 md:py-32 bg-church-black relative border-t border-white/10 overflow-hidden">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="grid lg:grid-cols-2 gap-20">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
               <div>
                 <span className="text-church-gold font-bold tracking-widest uppercase text-xs mb-4 block">Onde Estamos</span>
                 <h2 className="text-4xl md:text-6xl font-serif font-bold text-white mb-12">Visite Nossa <span className="italic text-church-gold">Casa</span></h2>
@@ -566,7 +566,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="h-[500px] rounded-[3rem] overflow-hidden border border-white/10 glass grayscale hover:grayscale-0 transition-all duration-700">
+              <div className="h-[300px] md:h-[500px] rounded-[2rem] md:rounded-[3rem] overflow-hidden border border-white/10 glass grayscale hover:grayscale-0 transition-all duration-700">
                 {/* Simulated Google Map Integration */}
                 <div className="w-full h-full bg-neutral-900 border border-white/5 relative flex items-center justify-center">
                   <div className="absolute inset-0 opacity-40">

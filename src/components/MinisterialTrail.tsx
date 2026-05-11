@@ -204,35 +204,35 @@ export default function MinisterialTrail() {
                     )}
                   >
                     {/* Stage Number / Pin */}
-                    <div className="absolute left-[-20px] md:left-1/2 md:-translate-x-1/2 top-0 md:top-12 z-20">
+                    <div className="absolute left-[20px] md:left-1/2 -translate-x-1/2 top-0 md:top-12 z-20">
                       <div className="w-10 h-10 md:w-16 md:h-16 rounded-full bg-church-black border-2 border-church-gold flex items-center justify-center text-church-gold shadow-[0_0_20px_rgba(198,146,20,0.3)]">
                         <span className="text-sm md:text-xl font-bold">{stage.number}</span>
                       </div>
                     </div>
 
                     {/* Content Card */}
-                    <div className="w-full md:w-[calc(50%-40px)] pl-10 md:pl-0">
-                      <div className="glass p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border-white/5 hover:border-church-gold/20 transition-all group overflow-hidden relative">
+                    <div className="w-full md:w-[calc(50%-40px)] pl-12 md:pl-0">
+                      <div className="glass p-6 md:p-10 rounded-[1.5rem] md:rounded-[2.5rem] border-white/5 hover:border-church-gold/20 transition-all group overflow-hidden relative">
                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 group-hover:opacity-10 transition-all">
-                          <stage.icon className="w-24 h-24 md:w-32 md:h-32 text-church-gold" />
+                          <stage.icon className="w-20 h-20 md:w-32 md:h-32 text-church-gold" />
                         </div>
                         
                         <div className="relative z-10">
-                          <span className="inline-block px-3 py-1 bg-church-gold/10 text-church-gold rounded-full text-[9px] md:text-[10px] uppercase font-bold tracking-widest mb-4 md:mb-6">
+                          <span className="inline-block px-3 py-1 bg-church-gold/10 text-church-gold rounded-full text-[9px] md:text-[10px] uppercase font-bold tracking-widest mb-4">
                             Perfil: {stage.profile}
                           </span>
-                          <h3 className="text-2xl md:text-4xl font-serif font-bold text-white mb-4 md:mb-6">Etapa {idx+1} - <span className="text-church-gold uppercase">{stage.title}</span></h3>
+                          <h3 className="text-xl md:text-4xl font-serif font-bold text-white mb-4">Etapa {idx+1} - <span className="text-church-gold uppercase">{stage.title}</span></h3>
                           
                           <div className="space-y-6">
                             <div>
                               <h4 className="text-[10px] uppercase tracking-widest font-bold text-white/40 mb-2">Objetivo</h4>
-                              <p className="text-white/70 font-light leading-relaxed text-sm md:text-base">{stage.objective}</p>
+                              <p className="text-white/70 font-light leading-relaxed text-xs md:text-base">{stage.objective}</p>
                             </div>
                             <div>
                               <h4 className="text-[10px] uppercase tracking-widest font-bold text-white/40 mb-3">Ações</h4>
-                              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <ul className="grid grid-cols-1 gap-2">
                                 {stage.actions.map((action, aIdx) => (
-                                  <li key={aIdx} className="flex items-center gap-2 text-xs md:text-sm text-white/60">
+                                  <li key={aIdx} className="flex items-center gap-2 text-[10px] md:text-sm text-white/60">
                                     <div className="w-1 h-1 bg-church-gold rounded-full" />
                                     {action}
                                   </li>
@@ -246,10 +246,10 @@ export default function MinisterialTrail() {
 
                     {/* Side Message */}
                     <div className={cn(
-                      "w-full md:w-[calc(50%-40px)] text-left pl-10 md:pl-0",
+                      "w-full md:w-[calc(50%-40px)] text-left pl-12 md:pl-0",
                       idx % 2 !== 0 ? "md:text-right" : ""
                     )}>
-                      <p className="text-base md:text-lg font-serif italic text-white/30 leading-relaxed max-w-xs md:mx-0">
+                      <p className="text-sm md:text-lg font-serif italic text-white/30 leading-relaxed max-w-xs md:mx-0">
                         &quot;{stage.sideMessage}&quot;
                       </p>
                     </div>
