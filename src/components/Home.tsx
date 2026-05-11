@@ -46,8 +46,13 @@ export default function Home() {
       >
         <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between">
           <a href="#home" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 border-2 border-church-gold flex items-center justify-center transform rotate-45 group-hover:scale-110 transition-transform duration-500">
-              <Cross className="w-5 h-5 text-church-gold -rotate-45" />
+            <div className="w-10 h-10 overflow-hidden transform group-hover:scale-110 transition-transform duration-500">
+              <img 
+                src="https://i.ibb.co/xt0yctN2/Chat-GPT-Image-11-de-mai-de-2026-11-57-15.png" 
+                alt="Logo Atalaias" 
+                className="w-full h-full object-contain"
+                referrerPolicy="no-referrer"
+              />
             </div>
             <div className="flex flex-col">
               <span className="text-white text-sm font-bold tracking-[0.2em] uppercase leading-none">Atalaias</span>
