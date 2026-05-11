@@ -1,12 +1,7 @@
 {
   "name": "Igreja Atalaias Vale da Benção",
-  "description": "Uma igreja moderna, premium e acolhedora focada em discipulado, liderança e no impacto do Reino de Deus.",
+  "description": "Igreja evangélica pentecostal em Guarulhos, comprometida em alcançar vidas, formar discípulos e cumprir o Ide de Jesus. Uma igreja de propósito, discipulado, liderança e impacto no Reino de Deus.",
   "requestFramePermissions": [
     "geolocation"
-  ],
-  "majorCapabilities": [
-    "SEO",
-    "Responsive Design",
-    "High Performance"
   ]
 }
