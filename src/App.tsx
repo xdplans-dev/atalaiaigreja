@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import MinisterialTrail from './components/MinisterialTrail';
 import Login from './components/Login';
+import Register from './components/Register';
 import Admin from './components/Admin';
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/trail" element={<MinisterialTrail />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
     </Router>

@@ -1,41 +1,73 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Lock, User, ArrowRight, Cross, AlertCircle } from 'lucide-react';
-import api from '../services/api';
+import { Lock, Mail, ArrowRight, Cross, AlertCircle } from 'lucide-react';
+import api from '../lib/api';
 import { cn } from '../lib/utils';
 
 export default function Login() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('session') === 'expired') {
+      setError('Sessão expirada. Faça login novamente.');
+    }
+  }, [location]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!email) {
+      setError('Informe seu e-mail.');
+      return;
+    }
+    if (!password) {
+      setError('Informe sua senha.');
+      return;
+    }
+
     setIsLoading(true);
     setError('');
 
     try {
-      // Adjusted based on typical render API behavior
-      const response = await api.post('/auth/login', { username, password });
-      const { token } = response.data;
+      const response = await api.post('/api/auth/login', { email, password });
       
-      localStorage.setItem('atalaia_token', token);
-      localStorage.setItem('atalaia_user', JSON.stringify(response.data.user || { username }));
+      // Handle the various response formats the API might return
+      const responseData = response.data;
+      const token = responseData?.token || responseData?.data?.token;
       
-      navigate('/admin');
+      if (token) {
+        localStorage.setItem('atalaias_token', token);
+        const userData = responseData?.user || responseData?.data?.user || { email };
+        localStorage.setItem('atalaias_user', JSON.stringify(userData));
+        navigate('/admin');
+      } else {
+        setError('Erro ao processar resposta do servidor.');
+      }
     } catch (err: any) {
       console.error('Login error:', err);
-      setError(err.response?.data?.message || 'Erro ao realizar login. Verifique suas credenciais.');
+      const serverMessage = err.response?.data?.message;
+      
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        setError(serverMessage || 'E-mail ou senha inválidos.');
+      } else if (!err.response) {
+        setError('Erro ao conectar com o servidor.');
+      } else {
+        setError(serverMessage || 'Erro ao realizar login.');
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-church-black flex items-center justify-center px-6 relative overflow-hidden">
+    <div className="min-h-screen bg-church-black flex flex-col items-center justify-center px-6 relative overflow-hidden">
       {/* Background Ambient Glows */}
       <div className="ambient-glow top-[10%] left-[10%] w-[400px] h-[400px] bg-church-gold opacity-[0.05]" />
       <div className="ambient-glow bottom-[10%] right-[10%] w-[500px] h-[500px] bg-church-gold opacity-[0.03]" />
@@ -49,7 +81,7 @@ export default function Login() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-church-gold/10 border border-church-gold/20 mb-6 transform rotate-45">
             <Cross className="w-8 h-8 text-church-gold -rotate-45" />
           </div>
-          <h1 className="text-3xl font-serif font-bold text-white mb-2">Área Administrativa</h1>
+          <h1 className="text-3xl font-serif font-bold text-white mb-2">Acesso Restrito</h1>
           <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] font-bold">Igreja Atalaias Vale da Benção</p>
         </div>
 
@@ -69,14 +101,14 @@ export default function Login() {
             )}
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-4">Usuário</label>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-4">E-mail</label>
               <div className="relative">
-                <User className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                 <input 
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Seu usuário"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Seu e-mail cadastrado"
                   required
                   className="w-full bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 py-4 text-white focus:border-church-gold/50 outline-none transition-all"
                 />
@@ -91,7 +123,7 @@ export default function Login() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Sua senha"
+                  placeholder="Sua senha de acesso"
                   required
                   className="w-full bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 py-4 text-white focus:border-church-gold/50 outline-none transition-all"
                 />
@@ -112,6 +144,12 @@ export default function Login() {
                 </>
               )}
             </button>
+
+            <div className="text-center pt-2">
+              <Link to="/register" className="text-[10px] uppercase tracking-widest text-church-gold hover:text-church-gold-light transition-colors underline underline-offset-4 font-bold">
+                Não tem acesso? Registrar
+              </Link>
+            </div>
           </form>
         </div>
 
@@ -122,6 +160,14 @@ export default function Login() {
           Voltar para o site público
         </button>
       </motion.div>
+
+      {/* Required Footer Credits */}
+      <footer className="absolute bottom-8 left-0 right-0 text-center px-6">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-white/20 leading-relaxed">
+          Desenvolvido por <span className="text-white/40">XD Plans</span><br />
+          Arquitetura e Engenharia de Software por <span className="text-white/40">David Amorim Xavier</span>
+        </p>
+      </footer>
     </div>
   );
 }

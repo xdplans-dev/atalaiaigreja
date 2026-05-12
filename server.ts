@@ -3,6 +3,7 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs";
 import mongoose from "mongoose";
+import axios from "axios";
 
 // MongoDB Schema
 const prayerRequestSchema = new mongoose.Schema({
@@ -20,11 +21,14 @@ async function startServer() {
   // Connect to MongoDB
   const mongodbUri = process.env.MONGODB_URI;
   if (mongodbUri) {
-    mongoose.connect(mongodbUri).then(() => {
-      console.log("Connected to MongoDB successfully");
+    mongoose.connect(mongodbUri, {
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+    }).then(() => {
+      console.log("✅ Connected to MongoDB successfully");
     }).catch((err) => {
-      console.error("CRITICAL: MongoDB connection error. Please check your MONGODB_URI in Settings > Secrets.");
-      console.error("Error details:", err.message);
+      console.error("❌ CRITICAL: MongoDB connection error.");
+      console.error("Reason:", err.message);
+      console.error("Please verify your MONGODB_URI in Settings > Secrets. Ensure the username and password are correct.");
     });
   } else {
     console.warn("MONGODB_URI not found in environment. Database features will be non-functional.");
@@ -32,19 +36,40 @@ async function startServer() {
 
   app.use(express.json());
 
-  // Auth Routes
-  app.post("/api/auth/login", (req, res) => {
-    const { username, password } = req.body;
-    
-    // Basic shared credentials for demonstration/admin access
-    // In a real app, these would be in DB or ENV
-    if (username === "admin" && password === "atalaias2026") {
-      res.json({ 
-        token: "fake-jwt-token-" + Date.now(),
-        user: { username: "Admin Atalaias", role: "admin" }
+  const RENDER_API_URL = "https://igrejaatalaiaapi.onrender.com";
+
+  // Proxy Auth Routes to external Render API
+  app.all("/api/auth/*", async (req, res) => {
+    try {
+      const url = `${RENDER_API_URL}${req.originalUrl}`;
+      const response = await axios({
+        method: req.method as any,
+        url: url,
+        data: req.body,
+        params: req.query,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          ...(req.headers.authorization ? { 'Authorization': req.headers.authorization } : {}),
+        },
+        timeout: 15000,
       });
-    } else {
-      res.status(401).json({ message: "Usuário ou senha incorretos." });
+      res.status(response.status).json(response.data);
+    } catch (error: any) {
+      if (error.response) {
+        // Only log serious server errors, not client auth errors
+        if (error.response.status >= 500) {
+          console.error(`External API Error ${error.response.status} for ${req.originalUrl}:`, error.message);
+        }
+        res.status(error.response.status).json(error.response.data);
+      } else {
+        console.error(`Proxy network error for ${req.originalUrl}:`, error.message);
+        res.status(500).json({ 
+          success: false, 
+          message: "Erro ao conectar com o servidor da API. Verifique a conexão.",
+          error: error.message 
+        });
+      }
     }
   });
 
