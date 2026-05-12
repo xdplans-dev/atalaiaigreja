@@ -64,7 +64,8 @@ export default function Home() {
     { label: 'Ao Vivo', href: '#live' },
     { label: 'Ministérios', href: '#ministries' },
     { label: 'Contribuições', href: '#offerings' },
-    { label: 'Contato', href: '#contact' }
+    { label: 'Contato', href: '#contact' },
+    { label: 'Painel', href: '/admin', isRoute: true }
   ];
 
   return (
@@ -676,7 +677,7 @@ export default function Home() {
             Desenvolvido por <span className="text-white font-bold tracking-normal">XD Plans • David Xavier</span>
           </span>
           <div className="hidden lg:block w-px h-4 bg-white/10"></div>
-          <Link to="/login" className="text-white/20 hover:text-white/40 transition-colors tracking-widest text-[8px] md:text-[9px] uppercase">
+          <Link to="/login" className="text-church-gold hover:text-church-gold-light transition-colors tracking-widest text-[8px] md:text-[9px] uppercase font-bold">
             Acesso Restrito
           </Link>
         </div>
