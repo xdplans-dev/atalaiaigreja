@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Lock, Mail, ArrowRight, Cross, AlertCircle } from 'lucide-react';
-import api from '../lib/api';
+import { login } from '../lib/api';
 import { cn } from '../lib/utils';
 
 export default function Login() {
@@ -36,7 +36,7 @@ export default function Login() {
     setError('');
 
     try {
-      const response = await api.post('/api/auth/login', { email, password });
+      const response = await login({ email, password });
       
       // Handle the various response formats the API might return
       const responseData = response.data;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Lock, Mail, User, ArrowRight, Cross, AlertCircle, CheckCircle } from 'lucide-react';
-import api from '../lib/api';
+import { register } from '../lib/api';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -25,7 +25,7 @@ export default function Register() {
     setIsLoading(true);
 
     try {
-      await api.post('/api/auth/register', { name, email, password });
+      await register({ name, email, password });
       setSuccess(true);
       setTimeout(() => navigate('/login'), 3000);
     } catch (err: any) {
