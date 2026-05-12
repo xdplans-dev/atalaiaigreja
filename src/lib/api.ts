@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = ''; // Use local server as proxy to avoid CORS/Network Error
+const API_URL = import.meta.env.VITE_API_URL || "https://igrejaatalaiaapi.onrender.com";
+
+console.log("API URL Configurada:", API_URL);
 
 const api = axios.create({
   baseURL: API_URL,
@@ -35,6 +37,7 @@ api.interceptors.response.use(
 );
 
 export const createPrayerRequest = async (data: any) => {
+  console.log("Enviando pedido de oração para:", `${API_URL}/api/prayers`);
   return api.post('/api/prayers', data);
 };
 
