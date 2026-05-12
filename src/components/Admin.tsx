@@ -48,12 +48,15 @@ export default function Admin() {
       // Step 2: Prayer stats check (don't fail the whole dashboard if this fails)
       try {
         const prayersRes = await getAdminPrayers();
-        const prayers = prayersRes.data || [];
+        // Handle both direct array or wrapped data structure
+        const prayersData = prayersRes.data?.data || prayersRes.data || [];
+        const prayers = Array.isArray(prayersData) ? prayersData : [];
+        
         setPrayerStats({
           total: prayers.length,
-          pending: prayers.filter((p: any) => !p.pastorResponse).length,
-          responded: prayers.filter((p: any) => p.pastorResponse).length,
-          public: prayers.filter((p: any) => p.allowPublicDisplay).length
+          pending: prayers.filter((p: any) => p && !p.pastorResponse).length,
+          responded: prayers.filter((p: any) => p && p.pastorResponse).length,
+          public: prayers.filter((p: any) => p && p.allowPublicDisplay).length
         });
       } catch (err) {
         console.error('Prayer data fetching failed:', err);

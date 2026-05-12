@@ -19,13 +19,13 @@ interface PrayerAdminListProps {
   onRefresh: () => void;
 }
 
-export default function PrayerAdminList({ prayers, onRefresh }: PrayerAdminListProps) {
+export default function PrayerAdminList({ prayers = [], onRefresh }: PrayerAdminListProps) {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPrayer, setSelectedPrayer] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const filteredPrayers = prayers.filter(prayer => {
+  const filteredPrayers = (prayers || []).filter(prayer => {
     const matchesFilter = filter === 'all' || 
       (filter === 'pendente' && !prayer.pastorResponse) ||
       (filter === 'respondido' && prayer.pastorResponse) ||
@@ -33,7 +33,7 @@ export default function PrayerAdminList({ prayers, onRefresh }: PrayerAdminListP
       (filter === 'privado' && !prayer.allowPublicDisplay);
     
     const matchesSearch = 
-      prayer.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (prayer.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (prayer.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (prayer.message || '').toLowerCase().includes(searchTerm.toLowerCase());
 

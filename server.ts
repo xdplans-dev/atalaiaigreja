@@ -42,6 +42,7 @@ async function startServer() {
           'Accept': 'application/json',
         },
         timeout: 15000,
+        validateStatus: (status) => (status >= 200 && status < 300) || status === 304,
       });
 
       console.log(`External API Response: ${response.status} for ${req.originalUrl}`);
