@@ -30,15 +30,24 @@ export default function Admin() {
         return;
       }
 
+      // Step 1: Auth check
       try {
-        const [authRes, prayersRes] = await Promise.all([
-          api.get('/api/auth/me'),
-          getAdminPrayers()
-        ]);
-
+        const authRes = await api.get('/api/auth/me');
         const userData = authRes.data?.data?.user || authRes.data?.user || authRes.data?.data;
         setUser(userData);
+      } catch (err: any) {
+        console.error('Auth verification failed:', err);
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          localStorage.removeItem('atalaias_token');
+          localStorage.removeItem('atalaias_user');
+          navigate('/login?session=expired');
+          return;
+        }
+      }
 
+      // Step 2: Prayer stats check (don't fail the whole dashboard if this fails)
+      try {
+        const prayersRes = await getAdminPrayers();
         const prayers = prayersRes.data || [];
         setPrayerStats({
           total: prayers.length,
@@ -46,19 +55,11 @@ export default function Admin() {
           responded: prayers.filter((p: any) => p.pastorResponse).length,
           public: prayers.filter((p: any) => p.allowPublicDisplay).length
         });
-
-        setIsLoading(false);
       } catch (err) {
-        console.error('Data fetching failed:', err);
-        // Only redirect if auth failed
-        if ((err as any).response?.status === 401) {
-          localStorage.removeItem('atalaias_token');
-          localStorage.removeItem('atalaias_user');
-          navigate('/login?session=expired');
-        } else {
-          setIsLoading(false);
-        }
+        console.error('Prayer data fetching failed:', err);
       }
+      
+      setIsLoading(false);
     };
 
     fetchData();
@@ -72,7 +73,7 @@ export default function Admin() {
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
-    { id: 'prayers', label: 'Pedidos de Oração', icon: MessageSquare, path: '/admin/pedidos-oracao' },
+    { id: 'prayers', label: 'Pedidos de Oração', icon: MessageSquare, path: '/admin/oracoes' },
     { id: 'events', label: 'Eventos & Cultos', icon: Calendar, path: '#' },
     { id: 'members', label: 'Membros', icon: Users, path: '#' },
     { id: 'settings', label: 'Configurações', icon: Settings, path: '#' },
@@ -221,7 +222,7 @@ export default function Admin() {
                   {/* Real Stats for Prayers */}
                   <motion.div 
                     whileHover={{ y: -5 }}
-                    onClick={() => navigate('/admin/pedidos-oracao')}
+                    onClick={() => navigate('/admin/oracoes')}
                     className="glass p-8 rounded-[2rem] border-church-gold/20 bg-church-gold/5 relative overflow-hidden group cursor-pointer"
                   >
                     <div className="absolute top-0 right-0 p-4">

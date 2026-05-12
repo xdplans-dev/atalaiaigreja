@@ -23,7 +23,9 @@ export default function AdminPrayersPage() {
     setError('');
     try {
       const response = await getAdminPrayers();
-      setPrayers(response.data || []);
+      // Handle both direct array or wrapped data structure
+      const prayersData = response.data?.data || response.data || [];
+      setPrayers(Array.isArray(prayersData) ? prayersData : []);
     } catch (err: any) {
       console.error('Error loading admin prayers:', err);
       if (err.response?.status === 401) {

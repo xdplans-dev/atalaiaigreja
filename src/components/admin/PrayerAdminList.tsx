@@ -97,7 +97,7 @@ export default function PrayerAdminList({ prayers, onRefresh }: PrayerAdminListP
         ) : (
           filteredPrayers.map((prayer) => (
             <motion.div 
-              key={prayer._id}
+              key={prayer._id || prayer.id || Math.random().toString()}
               layout
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}

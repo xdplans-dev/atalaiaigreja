@@ -13,7 +13,9 @@ export default function PrayerWall() {
     async function loadWall() {
       try {
         const response = await getPrayerWall();
-        setPrayers(response.data || []);
+        // Handle both direct array or wrapped data structure
+        const wallData = response.data?.data || response.data || [];
+        setPrayers(Array.isArray(wallData) ? wallData : []);
       } catch (err) {
         console.error('Error loading prayer wall:', err);
         setError('Não foi possível carregar os pedidos do mural.');
@@ -59,7 +61,7 @@ export default function PrayerWall() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
       {prayers.map((prayer: any) => (
-        <PrayerCard key={prayer._id} prayer={prayer} />
+        <PrayerCard key={prayer._id || prayer.id || Math.random().toString()} prayer={prayer} />
       ))}
     </div>
   );

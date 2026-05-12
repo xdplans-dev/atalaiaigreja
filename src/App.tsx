@@ -20,7 +20,7 @@ export default function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/oracao" element={<PrayerRequestPage />} />
         <Route path="/mural-oracao" element={<PrayerWallPage />} />
-        <Route path="/admin/pedidos-oracao" element={<AdminPrayersPage />} />
+        <Route path="/admin/oracoes" element={<AdminPrayersPage />} />
       </Routes>
     </Router>
   );
