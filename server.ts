@@ -39,8 +39,16 @@ async function startServer() {
   // Base URL for the external Render API
   const RENDER_API_URL = "https://igrejaatalaiaapi.onrender.com";
 
-  // Proxy Auth & Health Routes to external Render API
-  app.all(["/api/auth/*", "/api/health"], async (req, res) => {
+  // Proxy all /api/* requests to external Render API to avoid CORS
+  app.all("/api/*", async (req, res, next) => {
+    // If the path is handled by local handlers below, we skip proxying
+    // But since the user wants to use the existing API for everything now,
+    // we can proxy everything unless we specifically want to keep the local /api/prayer-requests
+    
+    // Check if it's one of ours
+    if (req.path === "/api/prayer-requests" && req.method === "POST") return next();
+    if (req.path === "/api/prayer-requests" && req.method === "GET") return next();
+
     try {
       const url = `${RENDER_API_URL}${req.originalUrl}`;
       const response = await axios({
