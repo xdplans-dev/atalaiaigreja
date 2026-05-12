@@ -32,6 +32,22 @@ async function startServer() {
 
   app.use(express.json());
 
+  // Auth Routes
+  app.post("/api/auth/login", (req, res) => {
+    const { username, password } = req.body;
+    
+    // Basic shared credentials for demonstration/admin access
+    // In a real app, these would be in DB or ENV
+    if (username === "admin" && password === "atalaias2026") {
+      res.json({ 
+        token: "fake-jwt-token-" + Date.now(),
+        user: { username: "Admin Atalaias", role: "admin" }
+      });
+    } else {
+      res.status(401).json({ message: "Usuário ou senha incorretos." });
+    }
+  });
+
   // API Routes
   app.post("/api/prayer-requests", async (req, res) => {
     const { name, request } = req.body;

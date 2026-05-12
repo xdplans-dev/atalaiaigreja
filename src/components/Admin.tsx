@@ -6,6 +6,7 @@ import {
   ChevronRight, Cross, Search, Trash2, CheckCircle, Clock, AlertCircle 
 } from 'lucide-react';
 import api from '../services/api';
+import axios from 'axios';
 import { cn } from '../lib/utils';
 
 interface PrayerRequest {
@@ -45,13 +46,13 @@ export default function Admin() {
     setIsTestingApi(true);
     setApiStatus('idle');
     try {
-      // Trying to hit a common endpoint or just the root
-      await api.get('/');
+      // Testing the external Render API specifically
+      await axios.get('https://igrejaatalaiaapi.onrender.com/');
       setApiStatus('success');
     } catch (err) {
       console.error('API connection failed:', err);
-      // Even if it returns 404 or something, if it reaches the server it might be considered success for "connection"
-      // But typically we want a healthy check
+      // Even if it returns 404, if it reaches the server it's technically a connection
+      // But usually we want a 200
       setApiStatus('error');
     } finally {
       setIsTestingApi(false);
@@ -62,15 +63,8 @@ export default function Admin() {
   const fetchPrayerRequests = async () => {
     setIsLoading(true);
     try {
-      // In a real scenario, this would come from the Render API or the local server
-      // For now, we'll try to fetch from the local API we saw in server.ts
-      const response = await fetch('/api/prayer-requests');
-      if (response.ok) {
-        const data = await response.json();
-        // The server.ts doesn't have a GET route for prayer requests yet, 
-        // we might need to add it or fetch from the Render API if it provides it.
-        setPrayerRequests(data || []);
-      }
+      const response = await api.get('/prayer-requests');
+      setPrayerRequests(response.data || []);
     } catch (err) {
       console.error('Error fetching prayer requests:', err);
     } finally {
