@@ -1,17 +1,20 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || "https://igrejaatalaiaapi.onrender.com";
+// Ao usar um caminho vazio ou relativo, o navegador enviará para o servidor local (proxy em server.ts).
+// Isso evita erros de CORS (Network Error) e contorna o erro 405 que ocorre em servidores estáticos.
+const API_URL = import.meta.env.VITE_API_URL || ""; 
 
-console.log("API_URL Configurada:", API_URL);
+console.log("API_URL Detectada:", API_URL || "(origem local / proxy)");
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: API_URL || "/", // Use '/' para caminhos relativos ao domínio atual
+  timeout: 100000, // 100s timeout on client side, slightly more than server proxy
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-console.log("Axios baseURL:", api.defaults.baseURL);
+console.log("Axios baseURL definitivo:", api.defaults.baseURL || window.location.origin);
 
 // Add interceptor to add auth token if available
 api.interceptors.request.use((config) => {
@@ -22,18 +25,25 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Add interceptor to handle session expiration
+// Add interceptor to handle session expiration and provide better error messages
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('atalaias_token');
-      // We can't use navigate here since it's not a component
-      // But we can redirect via window
       if (window.location.pathname !== '/login') {
         window.location.href = '/login?session=expired';
       }
     }
+    
+    // Improved network error logging
+    if (error.message === 'Network Error') {
+      console.error('ERRO DE REDE: O servidor está offline ou bloqueando a requisição (CORS).');
+      console.log('Verifique se o proxy local está funcionando ou se a URL da API está correta.');
+    } else if (error.code === 'ECONNABORTED') {
+      console.error('TIMEOUT: O servidor demorou muito para responder. Pode ser um cold start do Render.');
+    }
+
     return Promise.reject(error);
   }
 );
