@@ -60,6 +60,21 @@ async function startServer() {
     }
   });
 
+  app.get("/api/prayer-requests", async (req, res) => {
+    // Check if database is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ error: "Banco de dados indisponível." });
+    }
+
+    try {
+      const requests = await PrayerRequest.find().sort({ createdAt: -1 });
+      res.json(requests);
+    } catch (e) {
+      console.error("Error fetching prayer requests", e);
+      res.status(500).json({ error: "Erro ao buscar pedidos." });
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

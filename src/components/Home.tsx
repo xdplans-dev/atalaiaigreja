@@ -675,6 +675,10 @@ export default function Home() {
           <span className="text-white/40 tracking-wider">
             Desenvolvido por <span className="text-white font-bold tracking-normal">XD Plans • David Xavier</span>
           </span>
+          <div className="hidden lg:block w-px h-4 bg-white/10"></div>
+          <Link to="/login" className="text-white/20 hover:text-white/40 transition-colors tracking-widest text-[8px] md:text-[9px] uppercase">
+            Acesso Restrito
+          </Link>
         </div>
       </footer>
       
