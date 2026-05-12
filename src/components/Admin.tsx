@@ -168,10 +168,10 @@ export default function Admin() {
                 </div>
                 
                 <div className="relative z-10 text-center md:text-left flex-1">
-                  <h3 className="text-2xl lg:text-3xl font-serif font-bold text-white mb-4">Sistema em construção</h3>
+                  <h3 className="text-2xl lg:text-3xl font-serif font-bold text-white mb-2">Painel Administrativo</h3>
+                  <p className="text-church-gold font-bold uppercase tracking-widest text-[10px] mb-4">Sistema em construção</p>
                   <p className="text-white/60 font-light leading-relaxed max-w-2xl">
-                    A plataforma administrativa da Igreja Atalaias Vale da Benção está sendo preparada para receber módulos de gestão, 
-                    pedidos de oração, cultos, ministérios, trilhas de discipulado, transmissões ao vivo, contribuições e comunicação com os membros.
+                    A plataforma administrativa da Igreja Atalaias Vale da Benção está sendo preparada para receber módulos de gestão, pedidos de oração, cultos, ministérios, trilhas de discipulado, transmissões ao vivo, contribuições e comunicação com os membros.
                   </p>
                 </div>
               </div>

@@ -36,10 +36,11 @@ async function startServer() {
 
   app.use(express.json());
 
+  // Base URL for the external Render API
   const RENDER_API_URL = "https://igrejaatalaiaapi.onrender.com";
 
-  // Proxy Auth Routes to external Render API
-  app.all("/api/auth/*", async (req, res) => {
+  // Proxy Auth & Health Routes to external Render API
+  app.all(["/api/auth/*", "/api/health"], async (req, res) => {
     try {
       const url = `${RENDER_API_URL}${req.originalUrl}`;
       const response = await axios({
@@ -57,9 +58,11 @@ async function startServer() {
       res.status(response.status).json(response.data);
     } catch (error: any) {
       if (error.response) {
-        // Only log serious server errors, not client auth errors
-        if (error.response.status >= 500) {
-          console.error(`External API Error ${error.response.status} for ${req.originalUrl}:`, error.message);
+        // Log all auth errors from external API to help debug
+        if (error.response.status === 401 || error.response.status === 403) {
+          console.log(`Auth failure (401/403) from External API for ${req.originalUrl}:`, error.response.data);
+        } else if (error.response.status >= 500) {
+          console.error(`External API Server Error ${error.response.status} for ${req.originalUrl}:`, error.response.data);
         }
         res.status(error.response.status).json(error.response.data);
       } else {
