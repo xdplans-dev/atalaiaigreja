@@ -60,11 +60,11 @@ export default function Home() {
     { label: 'Início', href: '#home' },
     { label: 'A Igreja', href: '#about' },
     { label: 'Cultos', href: '#services' },
-    { label: 'Trilha', href: '/trail', isRoute: true },
+    { label: 'Pedidos de Oração', href: '/oracao', isRoute: true },
+    { label: 'Mural de Fé', href: '/mural-oracao', isRoute: true },
     { label: 'Ao Vivo', href: '#live' },
     { label: 'Ministérios', href: '#ministries' },
     { label: 'Contribuições', href: '#offerings' },
-    { label: 'Contato', href: '#contact' },
     { label: 'Painel', href: '/admin', isRoute: true }
   ];
 
@@ -260,15 +260,15 @@ export default function Home() {
                 </div>
 
                 {/* Prayer Request Card */}
-                <div className="p-6 bg-white/[0.03] border border-white/5 rounded-lg flex items-center justify-between group hover:border-church-gold/30 transition-all">
+                <Link to="/oracao" className="p-6 bg-white/[0.03] border border-white/5 rounded-lg flex items-center justify-between group hover:border-church-gold/30 transition-all cursor-pointer">
                   <div>
                     <h4 className="text-sm font-bold tracking-tight mb-1 uppercase text-white/90 font-serif">Pedido de Oração</h4>
                     <p className="text-xs text-white/40">Queremos orar por você agora.</p>
                   </div>
-                  <a href="#prayer" className="w-10 h-10 rounded-full border border-church-gold flex items-center justify-center text-church-gold group-hover:bg-church-gold group-hover:text-black transition-all">
+                  <div className="w-10 h-10 rounded-full border border-church-gold flex items-center justify-center text-church-gold group-hover:bg-church-gold group-hover:text-black transition-all">
                     <ArrowRight className="w-5 h-5" />
-                  </a>
-                </div>
+                  </div>
+                </Link>
 
                 {/* Locations / Agenda Mini */}
                 <div className="p-6 bg-church-gold text-black rounded-lg shadow-xl shadow-church-gold/20">
@@ -502,20 +502,30 @@ export default function Home() {
                   </motion.div>
                 )}
 
-                <button 
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-5 bg-church-gold hover:bg-church-gold-light disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-2xl font-bold uppercase tracking-[0.2em] text-sm transition-all shadow-xl shadow-church-gold/20 flex items-center justify-center gap-3"
-                >
-                  {isSubmitting ? (
-                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                  ) : (
-                    <>
-                      Enviar Pedido
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
+                <div className="flex flex-col gap-4">
+                  <button 
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-5 bg-church-gold hover:bg-church-gold-light disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-2xl font-bold uppercase tracking-[0.2em] text-sm transition-all shadow-xl shadow-church-gold/20 flex items-center justify-center gap-3"
+                  >
+                    {isSubmitting ? (
+                      <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    ) : (
+                      <>
+                        Enviar Mensagem Rápida
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                  
+                  <Link 
+                    to="/oracao"
+                    className="w-full py-5 border border-church-gold text-church-gold hover:bg-church-gold hover:text-white rounded-2xl font-bold uppercase tracking-[0.2em] text-sm transition-all flex items-center justify-center gap-3"
+                  >
+                    Abrir Página Completa de Oração
+                    <MessageSquare className="w-4 h-4" />
+                  </Link>
+                </div>
               </form>
             </div>
           </div>

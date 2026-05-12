@@ -34,4 +34,20 @@ api.interceptors.response.use(
   }
 );
 
+export const createPrayerRequest = async (data: any) => {
+  return api.post('/api/prayers', data);
+};
+
+export const getPrayerWall = async () => {
+  return api.get('/api/prayers/mural');
+};
+
+export const getAdminPrayers = async () => {
+  return api.get('/api/prayers/admin');
+};
+
+export const respondPrayerRequest = async (id: string, pastorResponse: string) => {
+  return api.patch(`/api/prayers/admin/${id}/respond`, { pastorResponse });
+};
+
 export default api;

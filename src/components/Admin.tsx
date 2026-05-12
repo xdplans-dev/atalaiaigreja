@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Users, Calendar, MessageSquare, LogOut, LayoutDashboard, Settings, 
   ChevronRight, Cross, Search, CheckCircle, Clock, AlertCircle,
-  Radio, HandCoins, BookOpen, HardHat
+  Radio, HandCoins, BookOpen, HardHat, TrendingUp
 } from 'lucide-react';
-import api from '../lib/api';
+import api, { getAdminPrayers } from '../lib/api';
 import { cn } from '../lib/utils';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [prayerStats, setPrayerStats] = useState({
+    total: 0,
+    pending: 0,
+    responded: 0,
+    public: 0
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const fetchData = async () => {
       const token = localStorage.getItem('atalaias_token');
       
       if (!token) {
@@ -25,20 +31,37 @@ export default function Admin() {
       }
 
       try {
-        const response = await api.get('/api/auth/me');
-        // The API returns { success: true, data: { user: ... } } or similar
-        const userData = response.data?.data?.user || response.data?.user || response.data?.data;
+        const [authRes, prayersRes] = await Promise.all([
+          api.get('/api/auth/me'),
+          getAdminPrayers()
+        ]);
+
+        const userData = authRes.data?.data?.user || authRes.data?.user || authRes.data?.data;
         setUser(userData);
+
+        const prayers = prayersRes.data || [];
+        setPrayerStats({
+          total: prayers.length,
+          pending: prayers.filter((p: any) => !p.pastorResponse).length,
+          responded: prayers.filter((p: any) => p.pastorResponse).length,
+          public: prayers.filter((p: any) => p.allowPublicDisplay).length
+        });
+
         setIsLoading(false);
       } catch (err) {
-        console.error('Auth verification failed:', err);
-        localStorage.removeItem('atalaias_token');
-        localStorage.removeItem('atalaias_user');
-        navigate('/login?session=expired');
+        console.error('Data fetching failed:', err);
+        // Only redirect if auth failed
+        if ((err as any).response?.status === 401) {
+          localStorage.removeItem('atalaias_token');
+          localStorage.removeItem('atalaias_user');
+          navigate('/login?session=expired');
+        } else {
+          setIsLoading(false);
+        }
       }
     };
 
-    checkAuth();
+    fetchData();
   }, [navigate]);
 
   const handleLogout = () => {
@@ -48,12 +71,20 @@ export default function Admin() {
   };
 
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'prayers', label: 'Pedidos de Oração', icon: MessageSquare },
-    { id: 'events', label: 'Eventos & Cultos', icon: Calendar },
-    { id: 'members', label: 'Membros', icon: Users },
-    { id: 'settings', label: 'Configurações', icon: Settings },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
+    { id: 'prayers', label: 'Pedidos de Oração', icon: MessageSquare, path: '/admin/pedidos-oracao' },
+    { id: 'events', label: 'Eventos & Cultos', icon: Calendar, path: '#' },
+    { id: 'members', label: 'Membros', icon: Users, path: '#' },
+    { id: 'settings', label: 'Configurações', icon: Settings, path: '#' },
   ];
+
+  const handleMenuClick = (item: any) => {
+    if (item.path !== '#' && item.path !== '/admin') {
+      navigate(item.path);
+    } else {
+      setActiveTab(item.id);
+    }
+  };
 
   const placeholderCards = [
     { label: 'Pedidos de Oração', icon: MessageSquare },
@@ -95,7 +126,7 @@ export default function Admin() {
           {menuItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => handleMenuClick(item)}
               className={cn(
                 "w-full flex items-center justify-center lg:justify-start gap-4 p-4 rounded-2xl transition-all duration-300 group",
                 activeTab === item.id 
@@ -187,7 +218,44 @@ export default function Admin() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {placeholderCards.map((card, i) => (
+                  {/* Real Stats for Prayers */}
+                  <motion.div 
+                    whileHover={{ y: -5 }}
+                    onClick={() => navigate('/admin/pedidos-oracao')}
+                    className="glass p-8 rounded-[2rem] border-church-gold/20 bg-church-gold/5 relative overflow-hidden group cursor-pointer"
+                  >
+                    <div className="absolute top-0 right-0 p-4">
+                      <div className="px-3 py-1 bg-church-gold/20 border border-church-gold/30 rounded-full">
+                        <span className="text-[8px] uppercase font-bold text-church-gold tracking-widest">Ativo</span>
+                      </div>
+                    </div>
+                    
+                    <div className="relative z-10 space-y-6">
+                      <div className="w-12 h-12 rounded-2xl bg-church-gold/20 flex items-center justify-center text-church-gold">
+                        <MessageSquare className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <div className="flex items-baseline gap-2">
+                          <p className="text-3xl font-bold text-white tracking-tighter">{prayerStats.total}</p>
+                          <p className="text-[10px] text-white/40 uppercase font-bold tracking-widest">Total</p>
+                        </div>
+                        <p className="text-sm font-bold text-church-gold mt-1">Pedidos de Oração</p>
+                        <div className="flex items-center gap-3 mt-4 pt-4 border-t border-white/5">
+                          <div>
+                            <p className="text-[8px] uppercase tracking-widest text-white/20 font-bold">Pendentes</p>
+                            <p className="text-[10px] font-bold text-amber-500">{prayerStats.pending}</p>
+                          </div>
+                          <div className="w-px h-6 bg-white/5" />
+                          <div>
+                            <p className="text-[8px] uppercase tracking-widest text-white/20 font-bold">Mural</p>
+                            <p className="text-[10px] font-bold text-green-500">{prayerStats.public}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {placeholderCards.slice(1).map((card, i) => (
                     <motion.div 
                       key={i}
                       whileHover={{ y: -5 }}
