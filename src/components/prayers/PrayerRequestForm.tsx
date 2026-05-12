@@ -18,16 +18,37 @@ export default function PrayerRequestForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title || !formData.message) {
-      setError('Por favor, preencha o título e a mensagem do seu pedido.');
+    
+    // Validation
+    if (!formData.title.trim()) {
+      setError('Por favor, preencha o título do seu pedido.');
+      return;
+    }
+    if (!formData.message.trim()) {
+      setError('Por favor, preencha o pedido de oração.');
+      return;
+    }
+    if (formData.message.trim().length < 10) {
+      setError('O pedido de oração deve ter pelo menos 10 caracteres.');
       return;
     }
 
     setIsLoading(true);
     setError('');
 
+    const payload = {
+      name: formData.name.trim() || "",
+      email: formData.email.trim() || "",
+      title: formData.title.trim(),
+      message: formData.message.trim(),
+      isAnonymous: Boolean(formData.isAnonymous),
+      allowPublicDisplay: Boolean(formData.allowPublicDisplay)
+    };
+
+    console.log("Enviando pedido de oração:", payload);
+
     try {
-      await createPrayerRequest(formData);
+      await createPrayerRequest(payload);
       setSuccess(true);
       setFormData({
         name: '',
@@ -39,7 +60,9 @@ export default function PrayerRequestForm() {
       });
     } catch (err: any) {
       console.error('Error submitting prayer request:', err);
-      setError('Erro ao enviar pedido de oração. Tente novamente mais tarde.');
+      // Show specific error message from API if available
+      const apiMessage = err.response?.data?.message || err.response?.data?.error;
+      setError(apiMessage || 'Erro ao enviar pedido de oração. Tente novamente mais tarde.');
     } finally {
       setIsLoading(false);
     }

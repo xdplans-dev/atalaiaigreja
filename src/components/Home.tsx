@@ -18,31 +18,51 @@ export default function Home() {
 
   const handlePrayerSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!prayerName || !prayerMessage) return;
+    if (!prayerName.trim() || !prayerMessage.trim()) {
+      setSubmitStatus({ type: 'error', message: 'Por favor, preencha nome e pedido.' });
+      return;
+    }
+
+    if (prayerMessage.trim().length < 10) {
+      setSubmitStatus({ type: 'error', message: 'O pedido deve ter pelo menos 10 caracteres.' });
+      return;
+    }
 
     setIsSubmitting(true);
     setSubmitStatus(null);
 
+    const payload = {
+      name: prayerName.trim(),
+      email: "", // Not collected in quick form
+      title: prayerMessage.trim().substring(0, 40) + (prayerMessage.length > 40 ? "..." : ""),
+      message: prayerMessage.trim(),
+      isAnonymous: false,
+      allowPublicDisplay: false
+    };
+
+    console.log("Enviando pedido rápido de oração:", payload);
+
     try {
-      const response = await fetch('/api/prayer-requests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: prayerName, request: prayerMessage }),
-      });
+      // Import the function inside or move it to top level. For now using top-level import in next step.
+      // But we already have createPrayerRequest available if imported.
+      const { createPrayerRequest: apiCreate } = await import('../lib/api');
+      const response = await apiCreate(payload);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setSubmitStatus({ type: 'success', message: data.message });
+      if (response.status === 200 || response.status === 201) {
+        setSubmitStatus({ type: 'success', message: 'Pedido enviado com sucesso! Estaremos orando por você.' });
         setPrayerName('');
         setPrayerMessage('');
-        // Clear success message after 5 seconds
         setTimeout(() => setSubmitStatus(null), 5000);
       } else {
-        setSubmitStatus({ type: 'error', message: data.error || 'Erro ao enviar pedido.' });
+        setSubmitStatus({ type: 'error', message: 'Erro ao enviar pedido.' });
       }
-    } catch (error) {
-      setSubmitStatus({ type: 'error', message: 'Erro de conexão com o servidor.' });
+    } catch (error: any) {
+      console.error('Prayer submit error:', error);
+      const apiMessage = error.response?.data?.message || error.response?.data?.error;
+      setSubmitStatus({ 
+        type: 'error', 
+        message: apiMessage || 'Erro de conexão com o servidor.' 
+      });
     } finally {
       setIsSubmitting(false);
     }
