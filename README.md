@@ -102,3 +102,11 @@ Em parceria com:
 🚧 Em desenvolvimento contínuo
 
 O projeto está sendo desenvolvido em versões evolutivas, recebendo melhorias constantes de estrutura, desempenho, design e funcionalidades.
+
+---
+
+# 📅 Atualização de 31/05/2026
+
+Hoje, 31 de maio de 2026, haverá uma reunião presencial entre David Xavier e o Junior, proprietário da igreja, para alinhar próximos passos, fortalecer a parceria e planejar a evolução do projeto.
+
+Esta atualização registra o compromisso de transformar a visão ministerial em ações concretas na plataforma.
