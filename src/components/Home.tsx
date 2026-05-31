@@ -82,6 +82,7 @@ export default function Home() {
     { label: 'Cultos', href: '#services' },
     { label: 'Pedidos de Oração', href: '/oracao', isRoute: true },
     { label: 'Mural de Fé', href: '/mural-oracao', isRoute: true },
+    { label: 'Agenda', href: '/agenda', isRoute: true },
     { label: 'Ao Vivo', href: '#live' },
     { label: 'Ministérios', href: '#ministries' },
     { label: 'Contribuições', href: '#offerings' },

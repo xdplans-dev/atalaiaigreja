@@ -50,7 +50,7 @@ async function startServer() {
       
       // Copy some essential headers from the original response back to the client
       if (response.headers['content-type']) {
-        res.setHeader('Content-Type', response.headers['content-type']);
+        res.setHeader('Content-Type', String(response.headers['content-type']));
       }
 
       res.status(response.status).send(response.data);
@@ -84,7 +84,12 @@ async function startServer() {
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        hmr: {
+          port: 24679,
+        },
+      },
       appType: "spa",
     });
     app.use(vite.middlewares);

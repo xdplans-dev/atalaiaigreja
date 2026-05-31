@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Users, Calendar, MessageSquare, LogOut, LayoutDashboard, Settings, 
@@ -20,6 +20,7 @@ export default function Admin() {
     public: 0
   });
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +69,16 @@ export default function Admin() {
     fetchData();
   }, [navigate]);
 
+  useEffect(() => {
+    if (location.pathname.startsWith('/admin/oracoes')) {
+      setActiveTab('prayers');
+    } else if (location.pathname.startsWith('/admin/agenda')) {
+      setActiveTab('events');
+    } else {
+      setActiveTab('dashboard');
+    }
+  }, [location.pathname]);
+
   const handleLogout = () => {
     localStorage.removeItem('atalaias_token');
     localStorage.removeItem('atalaias_user');
@@ -77,16 +88,15 @@ export default function Admin() {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
     { id: 'prayers', label: 'Pedidos de Oração', icon: MessageSquare, path: '/admin/oracoes' },
-    { id: 'events', label: 'Eventos & Cultos', icon: Calendar, path: '#' },
+    { id: 'events', label: 'Agenda', icon: Calendar, path: '/admin/agenda' },
     { id: 'members', label: 'Membros', icon: Users, path: '#' },
     { id: 'settings', label: 'Configurações', icon: Settings, path: '#' },
   ];
 
   const handleMenuClick = (item: any) => {
-    if (item.path !== '#' && item.path !== '/admin') {
+    setActiveTab(item.id);
+    if (item.path && item.path !== '#') {
       navigate(item.path);
-    } else {
-      setActiveTab(item.id);
     }
   };
 

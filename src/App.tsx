@@ -8,6 +8,8 @@ import Admin from './components/Admin';
 import PrayerRequestPage from './pages/PrayerRequestPage';
 import PrayerWallPage from './pages/PrayerWallPage';
 import AdminPrayersPage from './pages/admin/AdminPrayersPage';
+import AdminAgendaPage from './pages/admin/AdminAgendaPage';
+import AgendaPage from './pages/AgendaPage';
 
 export default function App() {
   return (
@@ -21,6 +23,8 @@ export default function App() {
         <Route path="/oracao" element={<PrayerRequestPage />} />
         <Route path="/mural-oracao" element={<PrayerWallPage />} />
         <Route path="/admin/oracoes" element={<AdminPrayersPage />} />
+        <Route path="/admin/agenda" element={<AdminAgendaPage />} />
+        <Route path="/agenda" element={<AgendaPage />} />
       </Routes>
     </Router>
   );

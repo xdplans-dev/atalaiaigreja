@@ -1,14 +1,14 @@
 import axios from 'axios';
 
-// Ao usar um caminho vazio ou relativo, o navegador enviará para o servidor local (proxy em server.ts).
-// Isso evita erros de CORS (Network Error) e contorna o erro 405 que ocorre em servidores estáticos.
-const API_URL = import.meta.env.VITE_API_URL || ""; 
+// Se não houver variável de ambiente, use o backend local em http://localhost:3001.
+// Isso permite desenvolver localmente sem precisar configurar proxy manual.
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001"; 
 
-console.log("API_URL Detectada:", API_URL || "(origem local / proxy)");
+console.log("API_URL Detectada:", API_URL);
 
 const api = axios.create({
-  baseURL: API_URL || "/", // Use '/' para caminhos relativos ao domínio atual
-  timeout: 100000, // 100s timeout on client side, slightly more than server proxy
+  baseURL: API_URL, // Use a URL completa do backend local
+  timeout: 100000, // 100s timeout on client side
   headers: {
     'Content-Type': 'application/json',
   },
@@ -61,6 +61,31 @@ export const getPrayerWall = async () => {
 export const getAdminPrayers = async () => {
   console.log("Buscando pedidos admin em:", `${API_URL}/api/prayers/admin`);
   return api.get('/api/prayers/admin');
+};
+
+export const getAdminEvents = async () => {
+  console.log("Buscando eventos admin em:", `${API_URL}/api/events/admin`);
+  return api.get('/api/events/admin');
+};
+
+export const getPublicEvents = async () => {
+  console.log("Buscando eventos públicos em:", `${API_URL}/api/events`);
+  return api.get('/api/events');
+};
+
+export const createEvent = async (data: any) => {
+  console.log("Criando evento em:", `${API_URL}/api/events/admin`);
+  return api.post('/api/events/admin', data);
+};
+
+export const updateEvent = async (id: string, data: any) => {
+  console.log("Atualizando evento em:", `${API_URL}/api/events/admin/${id}`);
+  return api.put(`/api/events/admin/${id}`, data);
+};
+
+export const deleteEvent = async (id: string) => {
+  console.log("Excluindo evento em:", `${API_URL}/api/events/admin/${id}`);
+  return api.delete(`/api/events/admin/${id}`);
 };
 
 export const respondPrayerRequest = async (id: string, pastorResponse: string) => {
