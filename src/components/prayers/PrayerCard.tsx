@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { MessageSquare, Quote, Calendar, User } from 'lucide-react';
 
 interface PrayerCardProps {
+  key?: React.Key;
   prayer: {
     title: string;
     message: string;

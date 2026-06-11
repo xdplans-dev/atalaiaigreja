@@ -88,6 +88,26 @@ export const deleteEvent = async (id: string) => {
   return api.delete(`/api/events/admin/${id}`);
 };
 
+export const getAdminUsers = async () => {
+  console.log("Buscando usuarios admin em:", `${API_URL}/api/users/admin`);
+  return api.get('/api/users/admin');
+};
+
+export const createAdminUser = async (data: any) => {
+  console.log("Criando usuario em:", `${API_URL}/api/users/admin`);
+  return api.post('/api/users/admin', data);
+};
+
+export const updateAdminUser = async (id: string, data: any) => {
+  console.log("Atualizando usuario em:", `${API_URL}/api/users/admin/${id}`);
+  return api.put(`/api/users/admin/${id}`, data);
+};
+
+export const toggleAdminUserStatus = async (id: string) => {
+  console.log("Alterando status do usuario em:", `${API_URL}/api/users/admin/${id}/status`);
+  return api.patch(`/api/users/admin/${id}/status`);
+};
+
 export const respondPrayerRequest = async (id: string, pastorResponse: string) => {
   console.log("Respondendo pedido em:", `${API_URL}/api/prayers/admin/${id}/respond`);
   return api.patch(`/api/prayers/admin/${id}/respond`, { pastorResponse });

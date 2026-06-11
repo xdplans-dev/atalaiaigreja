@@ -9,6 +9,7 @@ import PrayerRequestPage from './pages/PrayerRequestPage';
 import PrayerWallPage from './pages/PrayerWallPage';
 import AdminPrayersPage from './pages/admin/AdminPrayersPage';
 import AdminAgendaPage from './pages/admin/AdminAgendaPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AgendaPage from './pages/AgendaPage';
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/mural-oracao" element={<PrayerWallPage />} />
         <Route path="/admin/oracoes" element={<AdminPrayersPage />} />
         <Route path="/admin/agenda" element={<AdminAgendaPage />} />
+        <Route path="/admin/usuarios" element={<AdminUsersPage />} />
         <Route path="/agenda" element={<AgendaPage />} />
       </Routes>
     </Router>

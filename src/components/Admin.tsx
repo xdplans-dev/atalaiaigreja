@@ -74,6 +74,8 @@ export default function Admin() {
       setActiveTab('prayers');
     } else if (location.pathname.startsWith('/admin/agenda')) {
       setActiveTab('events');
+    } else if (location.pathname.startsWith('/admin/usuarios')) {
+      setActiveTab('users');
     } else {
       setActiveTab('dashboard');
     }
@@ -89,7 +91,7 @@ export default function Admin() {
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
     { id: 'prayers', label: 'Pedidos de Oração', icon: MessageSquare, path: '/admin/oracoes' },
     { id: 'events', label: 'Agenda', icon: Calendar, path: '/admin/agenda' },
-    { id: 'members', label: 'Membros', icon: Users, path: '#' },
+    { id: 'users', label: 'Usuarios', icon: Users, path: '/admin/usuarios' },
     { id: 'settings', label: 'Configurações', icon: Settings, path: '#' },
   ];
 
